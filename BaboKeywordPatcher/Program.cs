@@ -222,6 +222,18 @@ namespace BaboKeywordPatcher
                  StrMatch(name, "brand") || StrMatch(name, "bravery") || StrMatch(name, "embrace") || StrMatch(name, "abrasion") ||
                  StrMatch(name, "braille") || StrMatch(name, "bracket")*/
 
+            /*
+            Remove comment block to add that keyword, but it needs to be maped to an armor pice/'s
+            example: replace earring with the name of an armor pice that would align with the BaboKeyWord SLA_ArmorHarness
+            ("ArmorHarnessDefault
+            if (Settings.kwdSettings.ArmorHarnessDefault && (StrMatch(name, "earring")))
+            {
+
+            AddTag(armorEditObj, SLA_ArmorHarness);
+            }
+            End Example.
+            */
+
 
             if (Settings.kwdSettings.ArmorPrettyDefault && (StrMatch(name, "armor") || StrMatch(name, "cuiras") || StrMatch(name, "robes")))
                 {
@@ -248,18 +260,6 @@ namespace BaboKeywordPatcher
 
                 AddTag(armorEditObj, SLA_Earrings);
                 }// SLA_Earrings
-            /*
-            Remove comment block to add that keyword, but it needs to be maped to an armor pice/'s
-            example: replace earring with the name of an armor pice that would align with the BaboKeyWord SLA_ArmorHarness
-            ("ArmorHarnessDefault
-            if (Settings.kwdSettings.ArmorHarnessDefault && (StrMatch(name, "earring")))
-            {
-
-            AddTag(armorEditObj, SLA_ArmorHarness);
-            }
-            End Example.
-            */
-            // Added extra Keywords
 
             // ArmorHarnessDefault
             if (Settings.kwdSettings.ArmorHarnessDefault && (StrMatch(name, "harness")))
@@ -273,19 +273,6 @@ namespace BaboKeywordPatcher
                 AddTag(armorEditObj, SLA_ArmorSpendex);
                 }// SLA_ArmorSpendex
 
-            /*
-             *  duplicut entrie.
-                        // ArmorTransparentDefault
-                        if (Settings.kwdSettings.ArmorTransparentDefault && (StrMatch(name, "harness") || StrMatch(name, "corset") || StrMatch(name, "straitJacket") ||
-                            StrMatch(name, "hobble") || StrMatch(name, "tentacles") || StrMatch(name, "slave") || StrMatch(name, "chastity") ||
-                            StrMatch(name, "cuff") || StrMatch(name, "binder") || StrMatch(name, "yoke") || StrMatch(name, "mitten") ||
-                            StrMatch(name, "glove") || StrMatch(name, "gauntlets ") || StrMatch(name, "hands") || StrMatch(name, "adahy arms") || StrMatch(name, "anklets") ||
-                            StrMatch(name, "thighlet") || StrMatch(name, "headwrap") || StrMatch(name, "blindfold") | StrMatch(name, "shins") || StrMatch(name, "glasses")))
-                        {
-
-                            AddTag(armorEditObj, SLA_ArmorTransparent);
-                        }// SLA_ArmorTransparent")
-            */
             /*
                         // BootsHeelsDefault
                         if (Settings.kwdSettings.BootsHeelsDefault && (StrMatch(name, "boots")))
@@ -590,9 +577,6 @@ namespace BaboKeywordPatcher
                 AddTag(armorEditObj, SLA_BraArmor);
                 }// SLA_Brabikini
 
-
-
-
             // ArmorHalfNakedDefault
             if (Settings.kwdSettings.ArmorHalfNakedDefault && (StrMatch(name, "lace") || StrMatch(name, "lacebody") ||
                         StrMatch(name, "lingerie") || StrMatch(name, "shorts") || StrMatch(name, "upper slutty") ||
@@ -645,50 +629,13 @@ namespace BaboKeywordPatcher
                 }
             }
 
+        //shamelesly barrowed some code from https://github.com/MinLL/BaboKeywordPatcher and merged into mine
         public static void RunPatch(IPatcherState<ISkyrimMod, ISkyrimModGetter> state)
             {
-            /*HashSet<string> MASTER_MODS = new HashSet<string>()
-            {
-                "SexLabAroused.esm",
-            };
-
-            var modsToPatch = Settings.ModsToPatch;
-            //var modsToNotPatch = Settings.ModsToNotPatch;
-
-            *//*if (modsToNotPatch.Any())
-            {
-                Console.WriteLine($"Blacklist:\n{string.Join("\n", modsToNotPatch)}");
-            }*/
-
-            /*var shortenedLoadOrder = modsToPatch.Any()
-                ? state.LoadOrder.PriorityOrder.Where(mod => modsToPatch.Contains(mod.ModKey) && !modsToNotPatch.Contains(mod.ModKey)).ToList()
-                : state.LoadOrder.PriorityOrder.Where(mod => !modsToNotPatch.Contains(mod.ModKey)).ToList();*//*
-            var shortenedLoadOrder = modsToPatch.Any()
-             ? state.LoadOrder.PriorityOrder.Where(mod => modsToPatch.Contains(mod.ModKey)).ToList()
-             : state.LoadOrder.PriorityOrder.ToList();
-
-
-            LoadKeywords(state);
-
-            *//*foreach (var armor in shortenedLoadOrder.SelectMany(mod => mod.Mod?.Armors?.Where(a => a.Name != null)))
-            {
-                ParseName(state, armor, armor.Name?.ToString());
-            }*//*
-            foreach (var armor in shortenedLoadOrder
-                     .Where(mod => mod != null && mod.Mod != null && mod.Mod.Armors != null) // Ensure mod, Mod, and Armors are not null
-                     .SelectMany(mod => mod!.Mod!.Armors!.Where(a => a?.Name != null))) // Use null-forgiving operator
-            {
-                var armorName = armor.Name?.ToString();
-                if (armorName != null) // Ensure name is not null
-                {
-                    ParseName(state, armor, armorName);
-                }
-            }*/
-            //shamelesly barrowed some code from https://github.com/MinLL/BaboKeywordPatcher and merged into mine
             HashSet<string> MASTER_MODS = new()
-            {
-                "SexLabAroused.esm",
-            };
+    {
+        "SexLabAroused.esm",
+    };
 
             var modsToPatch = Settings.modstopatchSettings.ModsToPatch;
 
@@ -762,10 +709,24 @@ namespace BaboKeywordPatcher
                     }
                 }
 
+            // ESPFE (light plugin) check logic
+            uint uintMin = 0x000;
+            uint uintMax = 0xFFF;
+            bool isESPFE = true;
+            ModKey patchModKey = state.PatchMod.ModKey;
+
+            foreach (var rec in state.PatchMod.EnumerateMajorRecords())
+                {
+                if (!rec.FormKey.ModKey.Equals(patchModKey)) continue;
+
+                if (rec.FormKey.ID < uintMin) isESPFE = false;
+                if (rec.FormKey.ID > uintMax) isESPFE = false;
+                }
+
+            // Set the mod to a light plugin if conditions are met
+            if (isESPFE) state.PatchMod.ModHeader.Flags |= SkyrimModHeader.HeaderFlag.Small;
+
             System.Console.WriteLine("Done.");
-
-
-
             }
 
         // Keyword variables (placeholders)
