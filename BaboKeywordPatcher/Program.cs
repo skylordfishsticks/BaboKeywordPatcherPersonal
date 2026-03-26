@@ -241,18 +241,10 @@ namespace BaboKeywordPatcher
                 AddTag(armorEditObj, SLA_ArmorPretty);
                 }
 
-            if (Settings.kwdSettings.ArmorEroticDefault && (//StrMatch(name, "armor") || StrMatch(name, "cuiras") ||
-                StrMatch(name, "robes") || StrMatch(name, "torso slutty") || StrMatch(name, "oneytia torso") || StrMatch(name, "pajama upper") || StrMatch(name, "dress slutty") ||
-                StrMatch(name, "2B Body") || StrMatch(name, "kinkyBottom") || StrMatch(name, "kinkytop") || StrMatch(name, "kunoichi") || StrMatch(name, "misty suit") ||
-                StrMatch(name, "kei body") || StrMatch(name, "sassy secrets") || StrMatch(name, "sc body") || StrMatch(name, "lewd") ||
-                StrMatch(name, "student robe") || StrMatch(name, "researcher robe") || StrMatch(name, "librarian robe") ||
-                StrMatch(name, "airisu upper damaged") || StrMatch(name, "damaged") || StrMatch(name, "slutty") ||
-                StrMatch(name, "suit") || StrMatch(name, "latex") || StrMatch(name, "upper") || StrMatch(name, "lower") || StrMatch(name, "rubber") ||
-                StrMatch(name, "ebonite") || StrMatch(name, "slut") || StrMatch(name, "lingerie")))
-                {
+            
 
-                AddTag(armorEditObj, EroticArmor);
-                }
+            AddTag(armorEditObj, EroticArmor);
+                
 
             // EarringsDefault
             if (Settings.kwdSettings.EarringsDefault && (StrMatch(name, "earring")))
